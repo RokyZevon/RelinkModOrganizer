@@ -1,0 +1,70 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PublishAot Condition="'$(Configuration)' != 'Debug'">true</PublishAot>
+    <PublishAotSingleFile>true</PublishAotSingleFile>
+    <TrimmerSingleWarn>true</TrimmerSingleWarn>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <SatelliteResourceLanguages>en-US;zh-CN</SatelliteResourceLanguages>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <TrimmerRootAssembly Include="RelinkModOrganizer" />
+  </ItemGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.0.10" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.0.10" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.0.10" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.10" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.10" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.10" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.10" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="DataTools">
+    <PackageReference Include="FlatSharp.Compiler" Version="7.6.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="FlatSharp.Runtime" Version="7.6.0" />
+    <PackageReference Include="MessagePack" Version="2.5.140" />
+    <PackageReference Include="System.IO.Hashing" Version="8.0.0" />
+  </ItemGroup>
+  <ItemGroup Label="DataTools">
+    <FlatSharpSchema Include="ThirdParties/DataTools/Entities/IndexFile.fbs" />
+    <FlatSharpSchema Include="ThirdParties/DataTools/Entities/MInfo_ModelInfo.fbs" />
+  </ItemGroup>
+
+  <!-- AOT single file -->
+  <ItemGroup Label="AotSingleFile" Condition="'$(Configuration)' != 'Debug' AND '$(PublishAot)' == 'true' AND '$(PublishAotSingleFile)' == 'true'">
+    <DirectPInvoke Include="libHarfBuzzSharp" />
+    <NativeLibrary Include="Natives/Windows-x64/libHarfBuzzSharp.lib" Condition="$(RuntimeIdentifier.StartsWith('win'))" />
+
+    <DirectPInvoke Include="libSkiaSharp" />
+    <NativeLibrary Include="Natives/Windows-x64/libSkiaSharp.lib" Condition="$(RuntimeIdentifier.StartsWith('win'))" />
+
+    <DirectPInvoke Include="av_libglesv2" />
+    <NativeLibrary Include="Natives/Windows-x64/av_libglesv2.lib" Condition="$(RuntimeIdentifier.StartsWith('win'))" />
+
+    <Content Update="*.dll" CopyToPublishDirectory="Never" />
+  </ItemGroup>
+</Project>

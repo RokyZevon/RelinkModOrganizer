@@ -2,9 +2,9 @@ using Avalonia.Controls;
 
 namespace RelinkModOrganizer.Views;
 
-public partial class MainWindow : Window
+public partial class DialogWindow : Window
 {
-    public MainWindow()
+    public DialogWindow()
     {
         InitializeComponent();
     }

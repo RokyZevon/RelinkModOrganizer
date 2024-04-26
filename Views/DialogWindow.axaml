@@ -1,0 +1,29 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:RelinkModOrganizer.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="360"
+        x:Class="RelinkModOrganizer.Views.DialogWindow"
+        x:DataType="vm:DialogWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title=""
+        SizeToContent="WidthAndHeight"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="False"
+        WindowStartupLocation="CenterOwner">
+  <Panel>
+    <ExperimentalAcrylicBorder IsHitTestVisible="False">
+      <ExperimentalAcrylicBorder.Material>
+        <ExperimentalAcrylicMaterial
+            BackgroundSource="Digger"
+            TintColor="Black"
+            TintOpacity="1"
+            MaterialOpacity="0.65" />
+      </ExperimentalAcrylicBorder.Material>
+    </ExperimentalAcrylicBorder>
+
+    <ListBox ItemsSource="{Binding Messages}" Background="Transparent" />
+  </Panel>
+</Window>

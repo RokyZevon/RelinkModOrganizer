@@ -1,0 +1,113 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:RelinkModOrganizer.ViewModels"
+             xmlns:dvm="using:RelinkModOrganizer.ViewModels.Designs"
+             xmlns:models="using:RelinkModOrganizer.Models"
+             mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="360"
+             x:DataType="vm:ModListViewModel"
+             x:CompileBindings="True"
+             x:Class="RelinkModOrganizer.Views.ModListView">
+
+  <Design.DataContext>
+    <dvm:DesignModListViewModel />
+  </Design.DataContext>
+
+  <Grid ShowGridLines="False">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <Border Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="10" Background="#80404040" Margin="10">
+      <Grid ShowGridLines="False"
+            ColumnDefinitions="*, Auto"
+            RowDefinitions="Auto, *">
+        <TextBlock Grid.Column="0" Text="Name" FontWeight="Bold" Margin="10" />
+        <TextBlock Grid.Column="1" Text="Enabled" FontWeight="Bold" Margin="10" />
+        <ListBox ItemsSource="{Binding ModList}"
+                 Grid.Row="1"
+                 Grid.ColumnSpan="2"
+                 Background="Transparent">
+          <ListBox.ItemTemplate>
+            <DataTemplate>
+              <Grid ShowGridLines="False">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Name}"
+                           Grid.Column="0"
+                           HorizontalAlignment="Stretch"
+                           VerticalAlignment="Center"
+                           TextAlignment="Left" />
+                <ToggleSwitch IsChecked="{Binding Enabled}"
+                              Grid.Column="1"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Center"
+                              OnContent=""
+                              OffContent="" />
+              </Grid>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </Grid>
+    </Border>
+
+    <DockPanel Grid.Row="1" LastChildFill="False" Margin="10">
+      <Button Command="{Binding OpenModsFolderCommand}"
+              DockPanel.Dock="Left">
+        <Button.Content>
+          <StackPanel Orientation="Horizontal"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Margin="5">
+            <PathIcon Data="{StaticResource folder_open_regular}"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center" />
+            <TextBlock Text="Open Mods Folder"
+                       Margin="10,0,0,0"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center" />
+          </StackPanel>
+        </Button.Content>
+      </Button>
+      <Button Command="{Binding ReloadModsCommand}"
+              DockPanel.Dock="Left"
+              Margin="5,0,0,0">
+        <Button.Content>
+          <StackPanel Orientation="Horizontal"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Margin="5">
+            <PathIcon Data="{StaticResource arrow_sync_regular}"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center" />
+            <TextBlock Text="Reload"
+                       Margin="10,0,0,0"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center" />
+          </StackPanel>
+        </Button.Content>
+      </Button>
+      <Button Command="{Binding ModItCommand}"
+              DockPanel.Dock="Right">
+        <Button.Content>
+          <StackPanel Orientation="Horizontal"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Margin="5">
+            <PathIcon Data="{StaticResource checkmark_regular}"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center" />
+            <TextBlock Text="Mod it"
+                       Margin="10,0,0,0"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center" />
+          </StackPanel>
+        </Button.Content>
+      </Button>
+    </DockPanel>
+  </Grid>
+</UserControl>

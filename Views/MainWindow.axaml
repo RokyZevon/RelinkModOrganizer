@@ -1,20 +1,60 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:GBFRModOrganizer.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="GBFRModOrganizer.Views.MainWindow"
+        xmlns:vm="using:RelinkModOrganizer.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="360"
+        x:Class="RelinkModOrganizer.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="GBFRModOrganizer">
+        Title="GBFR Mod Organizer"
+        Width="1280"
+        Height="720"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="False"
+        WindowStartupLocation="CenterScreen">
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+  <Panel>
+    <ExperimentalAcrylicBorder IsHitTestVisible="False">
+      <ExperimentalAcrylicBorder.Material>
+        <ExperimentalAcrylicMaterial
+            BackgroundSource="Digger"
+            TintColor="Black"
+            TintOpacity="1"
+            MaterialOpacity="0.65" />
+      </ExperimentalAcrylicBorder.Material>
+    </ExperimentalAcrylicBorder>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <SplitView IsPaneOpen="True"
+               DisplayMode="CompactInline"
+               OpenPaneLength="120"
+               PaneBackground="Transparent">
+      <SplitView.Pane>
+        <ListBox SelectionMode="Single, AlwaysSelected"
+                 SelectedIndex="{Binding SelectedIndex}"
+                 Background="Transparent">
+          <ListBoxItem Name="ModList" IsEnabled="{Binding IsGamePathSet}">
+            <StackPanel Orientation="Horizontal">
+              <PathIcon Data="{StaticResource apps_list_regular}" />
+              <TextBlock Text="Mod List" Margin="10,0,0,0" />
+            </StackPanel>
+          </ListBoxItem>
+          <ListBoxItem Name="Settings">
+            <StackPanel Orientation="Horizontal">
+              <PathIcon Data="{StaticResource settings_regular}" />
+              <TextBlock Text="Settings" Margin="10,0,0,0" />
+            </StackPanel>
+          </ListBoxItem>
+        </ListBox>
+      </SplitView.Pane>
 
+      <SplitView.Content>
+        <Border CornerRadius="10" Background="Transparent">
+          <TransitioningContentControl Content="{Binding ContentViewModel}"
+                                       Margin="10"/>
+        </Border>
+      </SplitView.Content>
+    </SplitView>
+  </Panel>
 </Window>

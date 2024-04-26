@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 
-namespace GBFRModOrganizer.ViewModels;
+namespace RelinkModOrganizer.ViewModels;
 
 public class ViewModelBase : ReactiveObject
 {
