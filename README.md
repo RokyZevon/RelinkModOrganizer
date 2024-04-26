@@ -17,7 +17,8 @@ If any Mods are changed later, please re-click `Mod it`
 
 SDK: .NET 8.0
 
-- If you don't need AOT single file, you can directly run `dotnet publish`, which will generate 3 additional dll files under `publish`
+- If you don't need AOT single file, you need to change `<PublishAotSingleFile>` to `false` in `RelinkModOrganizer.csproj`.
+  Then run `dotnet publish`, which will generate 3 additional dll files under `publish`
 
 - If you want to build into a single AOT executable, you need to download the static libraries from [SkiaSharp.Static](https://github.com/2ndlab/SkiaSharp.Static) and [ANGLE.Static](https://github.com/2ndlab/ANGLE.Static), and put them into `Natives/Windows-x64` folder.
   After `dotnet publish` is done, you can safely delete the .dll files

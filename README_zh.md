@@ -17,9 +17,12 @@
 
 SDK: .NET 8.0
 
-- 如不需要 AOT 单文件, 可直接运行 `dotnet publish`, 这样会在 `publish` 下生成 3 个额外的 dll 文件
-- 如需构建成单个 AOT 可执行文件, 需从 [SkiaSharp.Static](https://github.com/2ndlab/SkiaSharp.Static) 和 [ANGLE.Static](https://github.com/2ndlab/ANGLE.Static) 下载相应的静态库, 并将其放在 `Natives/Windows-x64` 文件夹下, 然后运行 `dotnet publish`. 之后可以安全地删除上述 .dll 文件
+- 如不需要 AOT 单文件, 需先将 `RelinkModOrganizer.csproj` 中的 `<PublishAotSingleFile>` 设置为 `false`.
+  运行 `dotnet publish`, 这样会在 `publish` 下生成 3 个额外的 dll 文件
+
+- 如需构建成单个 AOT 可执行文件, 需从 [SkiaSharp.Static](https://github.com/2ndlab/SkiaSharp.Static) 和 [ANGLE.Static](https://github.com/2ndlab/ANGLE.Static) 下载相应的静态库, 并将其放在 `Natives/Windows-x64` 文件夹下.
+  运行 `dotnet publish`, 之后可以安全地删除上述 .dll 文件
 
 ## 致谢
 
-Modding 的核心逻辑来自于 [gbfrelink.utility.manager](https://github.com/WistfulHopes/gbfrelink.utility.manager), 感谢他们的付出!
+Modding 的核心逻辑来自于 [gbfrelink.utility.manager](https://github.com/WistfulHopes/gbfrelink.utility.manager), 感谢他们的杰出成果!

@@ -55,15 +55,15 @@
   </ItemGroup>
 
   <!-- AOT single file -->
-  <ItemGroup Label="AotSingleFile" Condition="'$(Configuration)' != 'Debug' AND '$(PublishAot)' == 'true' AND '$(PublishAotSingleFile)' == 'true'">
+  <ItemGroup Label="AotSingleFile" Condition="$(RuntimeIdentifier.StartsWith('win')) AND '$(Configuration)' != 'Debug' AND '$(PublishAot)' == 'true' AND '$(PublishAotSingleFile)' == 'true'">
     <DirectPInvoke Include="libHarfBuzzSharp" />
-    <NativeLibrary Include="Natives/Windows-x64/libHarfBuzzSharp.lib" Condition="$(RuntimeIdentifier.StartsWith('win'))" />
+    <NativeLibrary Include="Natives/Windows-x64/libHarfBuzzSharp.lib" />
 
     <DirectPInvoke Include="libSkiaSharp" />
-    <NativeLibrary Include="Natives/Windows-x64/libSkiaSharp.lib" Condition="$(RuntimeIdentifier.StartsWith('win'))" />
+    <NativeLibrary Include="Natives/Windows-x64/libSkiaSharp.lib" />
 
     <DirectPInvoke Include="av_libglesv2" />
-    <NativeLibrary Include="Natives/Windows-x64/av_libglesv2.lib" Condition="$(RuntimeIdentifier.StartsWith('win'))" />
+    <NativeLibrary Include="Natives/Windows-x64/av_libglesv2.lib" />
 
     <Content Update="*.dll" CopyToPublishDirectory="Never" />
   </ItemGroup>
