@@ -57,7 +57,8 @@ public class SettingsViewModel : ViewModelBase
             return;
 
         var gameExePath = files[0].Path.LocalPath;
-        if (FileVersionInfo.GetVersionInfo(gameExePath) is not
+        if (OperatingSystem.IsWindows() &&
+            FileVersionInfo.GetVersionInfo(gameExePath) is not
             {
                 ProductMajorPart: >= Consts.GameMajorVer,
                 ProductMinorPart: >= Consts.GameMinorVer,
