@@ -25,6 +25,11 @@ public class DataToolsService
 
     public void AddExternalFile(string relativeFilePath, string dstFilePath)
     {
+        if (Path.GetExtension(relativeFilePath) == ".json")
+            relativeFilePath = Path.ChangeExtension(relativeFilePath, ".msg");
+        if (Path.GetExtension(dstFilePath) == ".json")
+            dstFilePath = Path.ChangeExtension(dstFilePath, ".msg");
+
         var universalFilePath = relativeFilePath.Replace(
             Path.DirectorySeparatorChar,
             Path.AltDirectorySeparatorChar);
