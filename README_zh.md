@@ -4,6 +4,8 @@
 
 一个简易的 Granblue Relink Mod 管理器, 支持 Windows / Steam Deck
 
+可与 Reloaded-II 或其他格式的 Mod 兼容
+
 ## 使用
 
 1. 在 `Settings` 界面, 点击 `Locate Game` 来找到 `granblue_fantasy_relink.exe`

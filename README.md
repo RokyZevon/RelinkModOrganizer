@@ -4,6 +4,8 @@
 
 A simple Granblue Relink Mod Organizer, supporting Windows / Steam Deck
 
+Compatible with Reloaded-II Mods and other formats
+
 ## Usage
 
 1. In `Settings` page, click `Locate Game` to find your `granblue_fantasy_relink.exe`
