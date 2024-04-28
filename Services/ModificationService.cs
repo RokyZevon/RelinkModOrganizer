@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ReactiveUI;
 using RelinkModOrganizer.Models;
 using RelinkModOrganizer.ThirdParties.DataTools;
 using Results = RelinkModOrganizer.TryResults;
@@ -34,7 +35,9 @@ public class ModificationService(
                 .ToHashSet();
 
             var mod = configService.Config.Mods.GetValueOrDefault(modId) ??
-                new Mod(modId, await GetReloadedModNameAsync(modPath) ?? modId);
+                new Mod(modId, string.Empty);
+            await SetModNameAndIconAsync(mod, modPath);
+
             mod.RelativeFilePaths = relativeFilePaths;
 
             configService.Config.Mods[modId] = mod;
@@ -185,19 +188,37 @@ public class ModificationService(
         return Results.Ok();
     }
 
-    private static async Task<string?> GetReloadedModNameAsync(string path)
+    private static async Task SetModNameAndIconAsync(Mod mod, string modPath)
     {
         var modConfigJson = Directory
-            .GetFiles(path, Consts.ReloadedModConfigName, SearchOption.AllDirectories)
+            .GetFiles(modPath, Consts.ReloadedModConfigName, SearchOption.AllDirectories)
             .FirstOrDefault();
 
         if (string.IsNullOrWhiteSpace(modConfigJson))
-            return null;
+        {
+            mod.Name = mod.Id;
+            return;
+        }
 
         using var fs = File.OpenRead(modConfigJson);
         var doc = await JsonDocument.ParseAsync(fs);
-        doc.RootElement.TryGetProperty("ModName", out var modNameElem);
-        return modNameElem.GetString();
+
+        if (string.IsNullOrWhiteSpace(mod.Name))
+        {
+            doc.RootElement.TryGetProperty("ModName", out var modNameElem);
+            var name = modNameElem.GetString();
+            if (!string.IsNullOrWhiteSpace(name))
+                mod.Name = name;
+        }
+
+        doc.RootElement.TryGetProperty("ModIcon", out var modIconElem);
+        var icon = modIconElem.GetString();
+        if (!string.IsNullOrWhiteSpace(icon))
+        {
+            var modDir = Path.GetDirectoryName(modConfigJson)!; // should not be null
+            var previewImagePath = Path.Combine(modDir, icon);
+            mod.PreviewImagePath = previewImagePath;
+        }
     }
 
     private class HashSetComparer : IEqualityComparer<HashSet<string>>

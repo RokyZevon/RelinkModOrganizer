@@ -8,8 +8,10 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
   <PropertyGroup>
-    <PublishAot Condition="'$(Configuration)' != 'Debug'">true</PublishAot>
+    <PublishAot Condition="'$(Configuration)' != 'Debug'">false</PublishAot>
     <PublishAotSingleFile>true</PublishAotSingleFile>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
     <TrimmerSingleWarn>true</TrimmerSingleWarn>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <SatelliteResourceLanguages>en-US;zh-CN</SatelliteResourceLanguages>

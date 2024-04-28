@@ -1,4 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.Text.Json.Serialization;
+using Avalonia.Media.Imaging;
 using ReactiveUI;
 
 namespace RelinkModOrganizer.Models;
@@ -12,7 +16,13 @@ public class Mod(string id, string name) : ReactiveObject
     /// </summary>
     public string Id { get; set; } = id;
 
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Name is required.")]
     public string Name { get; set; } = name;
+
+    public string? PreviewImagePath { get; set; }
+
+    [JsonIgnore]
+    public Bitmap? PreviewImage { get => LoadImage(); }
 
     public bool Enabled
     {
@@ -21,6 +31,16 @@ public class Mod(string id, string name) : ReactiveObject
     }
 
     public HashSet<string> RelativeFilePaths { get; set; } = [];
+
+    private Bitmap? LoadImage()
+    {
+        if (string.IsNullOrWhiteSpace(PreviewImagePath) ||
+            !File.Exists(PreviewImagePath))
+            return null;
+
+        var stream = File.OpenRead(PreviewImagePath);
+        return new Bitmap(stream);
+    }
 }
 
 public record ModItem(string Id, string Name);

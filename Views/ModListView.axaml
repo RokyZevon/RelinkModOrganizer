@@ -22,28 +22,70 @@
 
     <Border Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="10" Background="#80404040" Margin="10">
       <Grid ShowGridLines="False"
-            ColumnDefinitions="*, Auto"
+            ColumnDefinitions="Auto, *, Auto"
             RowDefinitions="Auto, *">
-        <TextBlock Grid.Column="0" Text="Name" FontWeight="Bold" Margin="10" />
-        <TextBlock Grid.Column="1" Text="Enabled" FontWeight="Bold" Margin="10" />
+        <TextBlock Grid.Column="0" Text="Image" FontWeight="Bold" Margin="10" />
+        <TextBlock Grid.Column="1" Text="Name" FontWeight="Bold" Margin="15, 10, 10, 10" />
+        <TextBlock Grid.Column="2" Text="Enabled" FontWeight="Bold" Margin="10, 10, 15, 10" />
         <ListBox ItemsSource="{Binding ModList}"
                  Grid.Row="1"
-                 Grid.ColumnSpan="2"
+                 Grid.ColumnSpan="3"
                  Background="Transparent">
           <ListBox.ItemTemplate>
             <DataTemplate>
-              <Grid ShowGridLines="False">
+              <Grid ShowGridLines="False"
+                    RowDefinitions="32">
                 <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" />
                   <ColumnDefinition Width="*" />
                   <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding Name}"
-                           Grid.Column="0"
-                           HorizontalAlignment="Stretch"
-                           VerticalAlignment="Center"
-                           TextAlignment="Left" />
+
+                <!-- column 1 -->
+                <Image Source="{Binding PreviewImage}"
+                       PointerPressed="Image_PointerPressed"
+                       Margin="0"
+                       Width="48"
+                       Height="48"
+                       Stretch="Uniform">
+                  <FlyoutBase.AttachedFlyout>
+                    <Flyout Placement="RightEdgeAlignedTop"
+                            FlyoutPresenterClasses="flyoutClass">
+                      <Image Source="{Binding PreviewImage}"
+                             MaxWidth="640"
+                             MaxHeight="360" />
+                    </Flyout>
+                  </FlyoutBase.AttachedFlyout>
+                </Image>
+                <PathIcon Data="{StaticResource image_regular}"
+                          IsVisible="{Binding PreviewImage, Converter={x:Static ObjectConverters.IsNull}}"
+                          Width="48"
+                          Height="48">
+                  <FlyoutBase.AttachedFlyout>
+                    <Flyout Placement="RightEdgeAlignedTop"
+                            FlyoutPresenterClasses="flyoutClass">
+                      <PathIcon Data="{StaticResource image_regular}"
+                                MaxWidth="640"
+                                MaxHeight="360" />
+                    </Flyout>
+                  </FlyoutBase.AttachedFlyout>
+                </PathIcon>
+
+                <!-- column 2 -->
+                <TextBox Text="{Binding Name}"
+                         Grid.Column="1"
+                         HorizontalAlignment="Stretch"
+                         VerticalAlignment="Center"
+                         TextAlignment="Left"
+                         Margin="10, 0, 20, 0"
+                         Watermark="Name of the Mod"
+                         AcceptsReturn="False"
+                         TextWrapping="Wrap"
+                         Background="Transparent" />
+
+                <!-- column 3 -->
                 <ToggleSwitch IsChecked="{Binding Enabled}"
-                              Grid.Column="1"
+                              Grid.Column="2"
                               VerticalAlignment="Center"
                               HorizontalAlignment="Center"
                               OnContent=""
@@ -110,4 +152,9 @@
       </Button>
     </DockPanel>
   </Grid>
+  <UserControl.Styles>
+    <Style Selector="FlyoutPresenter.flyoutClass">
+      <Setter Property="MaxWidth" Value="960" />
+    </Style>
+  </UserControl.Styles>
 </UserControl>
