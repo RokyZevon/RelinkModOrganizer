@@ -2,6 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+             xmlns:id="clr-namespace:Avalonia.Xaml.Interactions.Draggable;assembly=Avalonia.Xaml.Interactions.Draggable"
+             xmlns:idd="clr-namespace:Avalonia.Xaml.Interactions.DragAndDrop;assembly=Avalonia.Xaml.Interactions.DragAndDrop"
+             xmlns:b="using:RelinkModOrganizer.Behaviors"
              xmlns:vm="using:RelinkModOrganizer.ViewModels"
              xmlns:dvm="using:RelinkModOrganizer.ViewModels.Designs"
              xmlns:models="using:RelinkModOrganizer.Models"
@@ -14,87 +18,166 @@
     <dvm:DesignModListViewModel />
   </Design.DataContext>
 
-  <Grid ShowGridLines="False">
-    <Grid.RowDefinitions>
-      <RowDefinition Height="*" />
-      <RowDefinition Height="Auto" />
-    </Grid.RowDefinitions>
+  <UserControl.Styles>
+    <Style Selector="DataGrid.DragAndDrop">
+      <Style.Resources>
+        <b:ItemsDataGridDropHandler x:Key="ItemsDataGridDropHandler" />
+      </Style.Resources>
+      <Setter
+        Property="RowHeaderWidth"
+        Value="24" />
+      <Setter Property="(i:Interaction.Behaviors)">
+        <i:BehaviorCollectionTemplate>
+          <i:BehaviorCollection>
+            <idd:ContextDropBehavior Handler="{StaticResource ItemsDataGridDropHandler}" />
+          </i:BehaviorCollection>
+        </i:BehaviorCollectionTemplate>
+      </Setter>
+    </Style>
 
+    <Style Selector="DataGrid.DragAndDrop DataGridRow.DraggingUp">
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Border BorderThickness="0 2 0 0" BorderBrush="{DynamicResource SystemAccentColor}" />
+        </Template>
+      </Setter>
+    </Style>
+
+    <Style Selector="DataGrid.DragAndDrop DataGridRow.DraggingDown">
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Border BorderThickness="0 0 0 2" BorderBrush="{DynamicResource SystemAccentColor}" />
+        </Template>
+      </Setter>
+    </Style>
+
+    <!-- This makes only the DataGridRowHeader available for dragging, instead of making the entire row draggable -->
+    <!-- Which prevents a conflict between text selection in a cell and drag-and-drop -->
+    <Style Selector="DataGrid.DragAndDrop DataGridRowHeader">
+      <Setter Property="(i:Interaction.Behaviors)">
+        <i:BehaviorCollectionTemplate>
+          <i:BehaviorCollection>
+            <b:ContextDragWithDirectionBehavior HorizontalDragThreshold="3" VerticalDragThreshold="3" />
+          </i:BehaviorCollection>
+        </i:BehaviorCollectionTemplate>
+      </Setter>
+      <Setter Property="Content">
+        <Template>
+          <Image
+            Margin="12,0,12,0"
+            Width="12"
+            Height="12"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center">
+            <Image.Source>
+              <DrawingImage Drawing="{StaticResource ReOrderDotsIcon}" />
+            </Image.Source>
+          </Image>
+        </Template>
+      </Setter>
+    </Style>
+
+    <Style Selector="DataGrid.ItemsDragAndDrop">
+      <Style.Resources>
+        <b:ItemsDataGridDropHandler x:Key="ItemsDataGridDropHandler" />
+      </Style.Resources>
+      <Setter Property="(i:Interaction.Behaviors)">
+        <i:BehaviorCollectionTemplate>
+          <i:BehaviorCollection>
+            <idd:ContextDropBehavior Handler="{StaticResource ItemsDataGridDropHandler}" />
+          </i:BehaviorCollection>
+        </i:BehaviorCollectionTemplate>
+      </Setter>
+    </Style>
+  </UserControl.Styles>
+
+  <UserControl.Resources>
+    <GeometryDrawing x:Key="ReOrderDotsIcon" Brush="WhiteSmoke" Geometry="{StaticResource re_order_dots_regular}" />
+  </UserControl.Resources>
+
+  <Grid ShowGridLines="False" RowDefinitions="*, Auto">
     <Border Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="10" Background="#80404040" Margin="10">
-      <Grid ShowGridLines="False"
-            ColumnDefinitions="Auto, *, Auto"
-            RowDefinitions="Auto, *">
-        <TextBlock Grid.Column="0" Text="Image" FontWeight="Bold" Margin="10" />
-        <TextBlock Grid.Column="1" Text="Name" FontWeight="Bold" Margin="15, 10, 10, 10" />
-        <TextBlock Grid.Column="2" Text="Enabled" FontWeight="Bold" Margin="10, 10, 15, 10" />
-        <ListBox ItemsSource="{Binding ModList}"
-                 Grid.Row="1"
-                 Grid.ColumnSpan="3"
-                 Background="Transparent">
-          <ListBox.ItemTemplate>
-            <DataTemplate>
-              <Grid ShowGridLines="False"
-                    RowDefinitions="32">
-                <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="Auto" />
-                  <ColumnDefinition Width="*" />
-                  <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <!-- column 1 -->
-                <Image Source="{Binding PreviewImage}"
-                       PointerPressed="Image_PointerPressed"
-                       Margin="0"
-                       Width="48"
-                       Height="48"
-                       Stretch="Uniform">
-                  <FlyoutBase.AttachedFlyout>
-                    <Flyout Placement="RightEdgeAlignedTop"
-                            FlyoutPresenterClasses="flyoutClass">
-                      <Image Source="{Binding PreviewImage}"
-                             MaxWidth="640"
-                             MaxHeight="360" />
-                    </Flyout>
-                  </FlyoutBase.AttachedFlyout>
-                </Image>
-                <PathIcon Data="{StaticResource image_regular}"
-                          IsVisible="{Binding PreviewImage, Converter={x:Static ObjectConverters.IsNull}}"
-                          Width="48"
-                          Height="48">
-                  <FlyoutBase.AttachedFlyout>
-                    <Flyout Placement="RightEdgeAlignedTop"
-                            FlyoutPresenterClasses="flyoutClass">
-                      <PathIcon Data="{StaticResource image_regular}"
-                                MaxWidth="640"
-                                MaxHeight="360" />
-                    </Flyout>
-                  </FlyoutBase.AttachedFlyout>
-                </PathIcon>
-
-                <!-- column 2 -->
-                <TextBox Text="{Binding Name}"
-                         Grid.Column="1"
-                         HorizontalAlignment="Stretch"
-                         VerticalAlignment="Center"
-                         TextAlignment="Left"
-                         Margin="10, 0, 20, 0"
-                         Watermark="Name of the Mod"
-                         AcceptsReturn="False"
-                         TextWrapping="Wrap"
-                         Background="Transparent" />
-
-                <!-- column 3 -->
+      <DataGrid ItemsSource="{Binding ModItems}"
+                GridLinesVisibility="Horizontal"
+                HeadersVisibility="All"
+                Margin="20"
+                CanUserReorderColumns="False"
+                CanUserResizeColumns="True"
+                CanUserSortColumns="False"
+                Classes="DragAndDrop ItemsDragAndDrop">
+        <DataGrid.Styles>
+          <Style Selector="DataGridColumnHeader">
+            <Setter Property="Background" Value="Transparent" />
+          </Style>
+        </DataGrid.Styles>
+        <DataGrid.Columns>
+          <DataGridTemplateColumn Header="Preview" Width="Auto" IsReadOnly="True">
+            <DataGridTemplateColumn.CellTemplate>
+              <DataTemplate>
+                <Panel>
+                  <Image Source="{Binding PreviewImage}"
+                         PointerPressed="Image_PointerPressed"
+                         Margin="0"
+                         Width="48"
+                         Height="48"
+                         Stretch="Uniform">
+                    <FlyoutBase.AttachedFlyout>
+                      <Flyout Placement="RightEdgeAlignedTop"
+                              FlyoutPresenterClasses="flyoutClass">
+                        <Image Source="{Binding PreviewImage}"
+                               MaxWidth="640"
+                               MaxHeight="360" />
+                      </Flyout>
+                    </FlyoutBase.AttachedFlyout>
+                  </Image>
+                  <PathIcon Data="{StaticResource image_regular}"
+                            IsVisible="{Binding PreviewImage, Converter={x:Static ObjectConverters.IsNull}}"
+                            Width="48"
+                            Height="48">
+                    <FlyoutBase.AttachedFlyout>
+                      <Flyout Placement="RightEdgeAlignedTop"
+                              FlyoutPresenterClasses="flyoutClass">
+                        <PathIcon Data="{StaticResource image_regular}"
+                                  MaxWidth="640"
+                                  MaxHeight="360" />
+                      </Flyout>
+                    </FlyoutBase.AttachedFlyout>
+                  </PathIcon>
+                </Panel>
+              </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+          </DataGridTemplateColumn>
+          <DataGridTextColumn Binding="{Binding Id}" Width="Auto" IsReadOnly="True">
+            <DataGridTextColumn.Header>
+              <TextBlock Text="Id" />
+            </DataGridTextColumn.Header>
+          </DataGridTextColumn>
+          <DataGridTextColumn Binding="{Binding Name}" Width="*" IsReadOnly="False">
+            <DataGridTextColumn.Header>
+              <TextBlock Text="Name" />
+            </DataGridTextColumn.Header>
+          </DataGridTextColumn>
+          <DataGridTemplateColumn Header="Enabled" Width="Auto" IsReadOnly="False">
+            <DataGridTemplateColumn.CellTemplate>
+              <DataTemplate>
                 <ToggleSwitch IsChecked="{Binding Enabled}"
-                              Grid.Column="2"
-                              VerticalAlignment="Center"
-                              HorizontalAlignment="Center"
                               OnContent=""
-                              OffContent="" />
-              </Grid>
-            </DataTemplate>
-          </ListBox.ItemTemplate>
-        </ListBox>
-      </Grid>
+                              OffContent=""
+                              HorizontalAlignment="Center"
+                              HorizontalContentAlignment="Center"
+                              VerticalAlignment="Center"
+                              VerticalContentAlignment="Center">
+                  <ToggleSwitch.Styles>
+                    <Style Selector="ToggleSwitch:checked /template/ Border">
+                      <Setter Property="Background" Value="DodgerBlue" />
+                    </Style>
+                  </ToggleSwitch.Styles>
+                </ToggleSwitch>
+              </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+          </DataGridTemplateColumn>
+        </DataGrid.Columns>
+      </DataGrid>
     </Border>
 
     <DockPanel Grid.Row="1" LastChildFill="False" Margin="10">

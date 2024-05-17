@@ -28,3 +28,4 @@ SDK: .NET 8.0
 ## Credits
 
 The core logic of Modding comes from [gbfrelink.utility.manager](https://github.com/WistfulHopes/gbfrelink.utility.manager), thanks for their great work!
+

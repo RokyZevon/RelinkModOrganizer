@@ -3,16 +3,16 @@
              x:Class="RelinkModOrganizer.App"
              xmlns:local="using:RelinkModOrganizer"
              RequestedThemeVariant="Dark">
-    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
-    <!-- Set to "Dark" to make the XAML previewer happy in development. -->
+  <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+  <!-- Set to "Dark" to make the XAML previewer happy in development. -->
 
-    <Application.DataTemplates>
-        <local:ViewLocator/>
-    </Application.DataTemplates>
+  <Application.DataTemplates>
+    <local:ViewLocator />
+  </Application.DataTemplates>
 
-    <Application.Styles>
-        <FluentTheme />
-        <StyleInclude Source="avares://RelinkModOrganizer/Assets/Icons.axaml"/>
-      <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
-    </Application.Styles>
+  <Application.Styles>
+    <FluentTheme />
+    <StyleInclude Source="avares://RelinkModOrganizer/Assets/Icons.axaml" />
+    <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
+  </Application.Styles>
 </Application>

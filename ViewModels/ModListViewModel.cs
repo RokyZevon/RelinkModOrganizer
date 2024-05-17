@@ -6,10 +6,9 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using DynamicData.Binding;
-using RelinkModOrganizer.Models;
-using RelinkModOrganizer.Services;
-using Microsoft.Extensions.FileProviders;
 using ReactiveUI;
+using RelinkModOrganizer.Mappers;
+using RelinkModOrganizer.Services;
 
 namespace RelinkModOrganizer.ViewModels;
 
@@ -17,34 +16,31 @@ public class ModListViewModel : ViewModelBase
 {
     private readonly ConfigurationService _configService;
     private readonly ModificationService _modificationService;
-    private readonly IFileProvider _fileProvider;
+
+    //private readonly IFileProvider _fileProvider;
     private readonly DialogService _dialogService;
+
+    //private ObservableCollection<ModItemViewModel> _modItems;
 
     public ModListViewModel(
         ConfigurationService configService,
         ModificationService modification,
-        IFileProvider fileProvider,
+        //IFileProvider fileProvider,
         DialogService dialogService)
     {
         _configService = configService;
         _modificationService = modification;
-        _fileProvider = fileProvider;
+        //_fileProvider = fileProvider;
         _dialogService = dialogService;
 
-        ModList.AddRange(_configService.Config.Mods.Values);
+        LoadModItems();
+
         OpenModsFolderCommand = ReactiveCommand.Create(OpenModsFolderHandler);
         ReloadModsCommand = ReactiveCommand.Create(ReloadModsCommandHandler);
         ModItCommand = ReactiveCommand.CreateFromTask(ModItHandlerAsync);
-
-        foreach (var mod in ModList)
-            mod.WhenAnyValue(m => m.Enabled).Subscribe(async enabled =>
-            {
-                _configService.Config.Mods[mod.Id].Enabled = enabled;
-                await _configService.SaveChangesAsync();
-            });
     }
 
-    public ObservableCollectionExtended<Mod> ModList { get; } = [];
+    public ObservableCollectionExtended<ModItemViewModel> ModItems { get; private set; } = [];
 
     public ICommand OpenModsFolderCommand { get; }
     public ICommand ReloadModsCommand { get; }
@@ -69,8 +65,24 @@ public class ModListViewModel : ViewModelBase
         (await _modificationService.LoadModsFromDiskAsync())
             .Except(_dialogService.ShowDialog);
 
-        ModList.Clear();
-        ModList.AddRange(_configService.Config.Mods.Values);
+        LoadModItems();
+    }
+
+    private void LoadModItems()
+    {
+        ModItems.Clear();
+        ModItems.AddRange(_configService.Config.Mods.Values.OrderBy(mod => mod.Order).Select(mod => mod.ToViewModel()).ToList());
+        foreach (var item in ModItems)
+            item.WhenAnyValue(mi => mi.Name, mi => mi.Enabled, mi => mi.Order)
+                .Subscribe(async _ =>
+                {
+                    item.MapTo(_configService.Config.Mods[item.Id]);
+                    _configService.Config.Mods = _configService.Config.Mods
+                        .AsEnumerable()
+                        .OrderBy(mod => mod.Value.Order)
+                        .ToDictionary(kv => kv.Key, kv => kv.Value);
+                    await _configService.SaveChangesAsync();
+                });
     }
 
     private async Task ModItHandlerAsync()

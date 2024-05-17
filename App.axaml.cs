@@ -4,12 +4,11 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
+using Microsoft.Extensions.DependencyInjection;
 using RelinkModOrganizer.Services;
 using RelinkModOrganizer.ThirdParties.DataTools;
 using RelinkModOrganizer.ViewModels;
 using RelinkModOrganizer.Views;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 
 namespace RelinkModOrganizer;
 
@@ -47,8 +46,8 @@ public static partial class ServiceExtensions
         services.AddSingleton<ConfigurationService>()
                 .AddSingleton<ModificationService>()
                 .AddSingleton<DataToolsService>()
-                .AddSingleton <DialogService>()
-                .AddFileProvider();
+                .AddSingleton<DialogService>();
+                //.AddFileProvider();
 
     public static IServiceCollection AddViewModels(this IServiceCollection services) =>
         services.AddSingleton<MainWindowViewModel>()
@@ -57,12 +56,12 @@ public static partial class ServiceExtensions
                 .AddSingleton<SettingsViewModel>()
                 .AddSingleton<DialogWindowViewModel>();
 
-    private static IServiceCollection AddFileProvider(this IServiceCollection services)
-    {
-        var root = Path.Combine(AppContext.BaseDirectory, Consts.ModsDirName);
-        if (!Directory.Exists(root))
-            Directory.CreateDirectory(root);
+    //private static IServiceCollection AddFileProvider(this IServiceCollection services)
+    //{
+    //    var root = Path.Combine(AppContext.BaseDirectory, Consts.ModsDirName);
+    //    if (!Directory.Exists(root))
+    //        Directory.CreateDirectory(root);
 
-        return services.AddSingleton<IFileProvider>(new PhysicalFileProvider(root));
-    }
+    //    return services.AddSingleton<IFileProvider>(new PhysicalFileProvider(root));
+    //}
 }

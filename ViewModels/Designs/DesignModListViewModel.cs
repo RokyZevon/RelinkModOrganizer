@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using DynamicData;
-using RelinkModOrganizer.Models;
-using RelinkModOrganizer.Services;
-using Microsoft.Extensions.FileProviders;
+using DynamicData.Binding;
 using ReactiveUI;
 
 namespace RelinkModOrganizer.ViewModels.Designs;
@@ -18,28 +13,20 @@ public class DesignModListViewModel : ViewModelBase
 {
     public DesignModListViewModel()
     {
-        var mods = new List<Mod>()
-        {
-            new("mod 1", "Mod 1") { Enabled = true },
-            new("mod 2", "Mod 2") { Enabled = false },
-            new("mod 3", "Mod 3") { Enabled = true },
-            new("mod 4", "Mod 4") { Enabled = false },
-            new("mod 5", "Mod 5") { Enabled = true },
-            new("mod 6", "Mod 6") { Enabled = false },
-            new("mod 7", "Mod 7") { Enabled = true },
-            new("mod 8", "Mod 8") { Enabled = false },
-            new("mod 9", "Mod 9") { Enabled = true },
-            new("mod 10", "Mod 10") { Enabled = false }
-        };
-
-        ModList = new(mods);
+        ModItems = new(Enumerable
+            .Range(1, 20)
+            .Select(i => new ModItemViewModel($"mod-{i}", $"Mod {i}")
+            {
+                Enabled = i % 2 != 0,
+                Order = i
+            }));
 
         OpenModsFolderCommand = ReactiveCommand.Create(OpenModsFolderHandler);
         ReloadModsCommand = ReactiveCommand.Create(ReloadModsCommandHandler);
         ModItCommand = ReactiveCommand.CreateFromTask(ModItHandlerAsync);
     }
 
-    public ObservableCollection<Mod> ModList { get; }
+    public ObservableCollectionExtended<ModItemViewModel> ModItems { get; private set; }
 
     public ICommand OpenModsFolderCommand { get; }
     public ICommand ReloadModsCommand { get; }
