@@ -11,7 +11,7 @@
              xmlns:models="using:RelinkModOrganizer.Models"
              mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="360"
              x:DataType="vm:ModListViewModel"
-             x:CompileBindings="True"
+             x:CompileBindings="False"
              x:Class="RelinkModOrganizer.Views.ModListView">
 
   <Design.DataContext>
@@ -75,6 +75,7 @@
           </Image>
         </Template>
       </Setter>
+      <Setter Property="ToolTip.Tip" Value="Drag here to reorder" />
     </Style>
 
     <Style Selector="DataGrid.ItemsDragAndDrop">
@@ -100,7 +101,7 @@
       <DataGrid ItemsSource="{Binding ModItems}"
                 GridLinesVisibility="Horizontal"
                 HeadersVisibility="All"
-                Margin="20"
+                Margin="12"
                 CanUserReorderColumns="False"
                 CanUserResizeColumns="True"
                 CanUserSortColumns="False"
@@ -108,13 +109,70 @@
         <DataGrid.Styles>
           <Style Selector="DataGridColumnHeader">
             <Setter Property="Background" Value="Transparent" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Template">
+              <Setter.Value>
+                <ControlTemplate TargetType="DataGridColumnHeader">
+                  <Border Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}">
+                    <Grid>
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                      </Grid.ColumnDefinitions>
+                      <!-- ContentPresenter for header content -->
+                      <ContentPresenter Grid.Column="0"
+                                        Margin="12, 0"
+                                        VerticalAlignment="Center"
+                                        Content="{TemplateBinding Content}" />
+                      <!-- Omit the PART_SortIcon -->
+                    </Grid>
+                  </Border>
+                </ControlTemplate>
+              </Setter.Value>
+            </Setter>
           </Style>
         </DataGrid.Styles>
         <DataGrid.Columns>
-          <DataGridTemplateColumn Header="Preview" Width="Auto" IsReadOnly="True">
+          <!-- Priority / Order -->
+          <DataGridTemplateColumn Width="Auto" IsReadOnly="True">
+            <DataGridTemplateColumn.Header>
+              <TextBlock Text="Priority">
+                <ToolTip.Tip>
+                  <TextBlock>
+                    The higher the priority (lower number), <LineBreak />
+                    the more important the mod is, <LineBreak />
+                    and it will overwrite others in conflicts.
+                  </TextBlock>
+                </ToolTip.Tip>
+              </TextBlock>
+            </DataGridTemplateColumn.Header>
             <DataGridTemplateColumn.CellTemplate>
               <DataTemplate>
-                <Panel>
+                <TextBlock Text="{Binding Order}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Margin="12, 0">
+                </TextBlock>
+              </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+          </DataGridTemplateColumn>
+
+          <!-- Preview Image -->
+          <DataGridTemplateColumn Width="Auto" IsReadOnly="True">
+            <DataGridTemplateColumn.Header>
+              <TextBlock Text="Preview">
+                <ToolTip.Tip>
+                  <TextBlock>
+                    Click to view a larger image.
+                  </TextBlock>
+                </ToolTip.Tip>
+              </TextBlock>
+            </DataGridTemplateColumn.Header>
+            <DataGridTemplateColumn.CellTemplate>
+              <DataTemplate>
+                <Panel Margin="12, 0">
                   <Image Source="{Binding PreviewImage}"
                          PointerPressed="Image_PointerPressed"
                          Margin="0"
@@ -147,17 +205,36 @@
               </DataTemplate>
             </DataGridTemplateColumn.CellTemplate>
           </DataGridTemplateColumn>
+
+          <!-- ID -->
           <DataGridTextColumn Binding="{Binding Id}" Width="Auto" IsReadOnly="True">
             <DataGridTextColumn.Header>
-              <TextBlock Text="Id" />
+              <TextBlock Text="ID">
+                <ToolTip.Tip>
+                  <TextBlock>
+                    Folder's name in the Mods Folder.
+                  </TextBlock>
+                </ToolTip.Tip>
+              </TextBlock>
             </DataGridTextColumn.Header>
           </DataGridTextColumn>
+
+          <!-- Name -->
           <DataGridTextColumn Binding="{Binding Name}" Width="*" IsReadOnly="False">
             <DataGridTextColumn.Header>
-              <TextBlock Text="Name" />
+              <TextBlock Text="Name">
+                <ToolTip.Tip>
+                  <TextBlock>
+                    Click to edit.
+                  </TextBlock>
+                </ToolTip.Tip>
+              </TextBlock>
             </DataGridTextColumn.Header>
           </DataGridTextColumn>
+
+          <!-- Enabled -->
           <DataGridTemplateColumn Header="Enabled" Width="Auto" IsReadOnly="False">
+            <DataGridTemplateColumn.CellStyleClasses></DataGridTemplateColumn.CellStyleClasses>
             <DataGridTemplateColumn.CellTemplate>
               <DataTemplate>
                 <ToggleSwitch IsChecked="{Binding Enabled}"
@@ -166,7 +243,8 @@
                               HorizontalAlignment="Center"
                               HorizontalContentAlignment="Center"
                               VerticalAlignment="Center"
-                              VerticalContentAlignment="Center">
+                              VerticalContentAlignment="Center"
+                              Margin="12, 0">
                   <ToggleSwitch.Styles>
                     <Style Selector="ToggleSwitch:checked /template/ Border">
                       <Setter Property="Background" Value="DodgerBlue" />

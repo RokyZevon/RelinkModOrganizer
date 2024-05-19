@@ -12,7 +12,7 @@ public class ModItemViewModel(
 {
     private string name = name;
     private bool enabled;
-    private int order;
+    private int order = -1;
 
     public string Id => id;
 

@@ -4,8 +4,8 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using RelinkModOrganizer.Models;
 using ReactiveUI;
+using RelinkModOrganizer.Models;
 
 namespace RelinkModOrganizer.Services;
 
@@ -27,10 +27,16 @@ public class ConfigurationService
 
     public Config Config { get; private set; }
 
-    public async Task SaveChangesAsync() =>
-        await File.WriteAllTextAsync(
+    public async Task SaveChangesAsync()
+    {
+        using var stream = new FileStream(
             Path.Combine(AppContext.BaseDirectory, Consts.ConfigName),
-            Config.ToJson());
+            FileMode.Create,
+            FileAccess.Write,
+            FileShare.Read);
+        using var writer = new StreamWriter(stream);
+        await writer.WriteAsync(Config.ToJson());
+    }
 
     public bool IsGameDirPathValid() =>
         !string.IsNullOrWhiteSpace(Config.GameDirPath) &&

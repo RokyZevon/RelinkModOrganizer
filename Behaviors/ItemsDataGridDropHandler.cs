@@ -26,9 +26,12 @@ public sealed class ItemsDataGridDropHandler : BaseDataGridDropHandler<ModItemVi
         var items = vm.ModItems;
         return RunDropAction(dg, e, bExecute, sourceItem, targetItem, items);
     }
-    public override void Drop(object? sender, DragEventArgs e, object? sourceContext, object? targetContext)
+
+    public override async void Drop(object? sender, DragEventArgs e, object? sourceContext, object? targetContext)
     {
         base.Drop(sender, e, sourceContext, targetContext);
-        // Todo
+
+        if (targetContext is ModListViewModel vm)
+            await vm.ReOrderAsync();
     }
 }

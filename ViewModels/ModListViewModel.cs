@@ -46,6 +46,27 @@ public class ModListViewModel : ViewModelBase
     public ICommand ReloadModsCommand { get; }
     public ICommand ModItCommand { get; }
 
+    public async Task ReOrderAsync()
+    {
+        if (!ModItems.Any())
+            return;
+
+        var mods = _configService.Config.Mods;
+
+        foreach (var item in ModItems)
+        {
+            item.Order = ModItems.IndexOf(item);
+            var mod = mods[item.Id];
+            if (mod != null)
+                mod.Order = item.Order;
+        }
+
+        mods = mods.OrderBy(m => m.Value.Order)
+            .ToDictionary(kv => kv.Key, kv => kv.Value);
+
+        await _configService.SaveChangesAsync();
+    }
+
     private static void OpenModsFolderHandler()
     {
         var modsDirPath = Path.Combine(AppContext.BaseDirectory, Consts.ModsDirName);

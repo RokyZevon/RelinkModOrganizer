@@ -17,7 +17,7 @@ public class Mod(string id, string name)
 
     public bool Enabled { get; set; }
 
-    public int Order { get; set; }
+    public int Order { get; set; } = -1;
 
     public HashSet<string> RelativeFilePaths { get; set; } = [];
 }

@@ -52,7 +52,7 @@
       <SplitView.Content>
         <Border CornerRadius="10" Background="Transparent">
           <TransitioningContentControl Content="{Binding ContentViewModel}"
-                                       Margin="10"/>
+                                       Margin="10" />
         </Border>
       </SplitView.Content>
     </SplitView>

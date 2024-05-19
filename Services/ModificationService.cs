@@ -4,9 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using DynamicData.Binding;
 using ReactiveUI;
 using RelinkModOrganizer.Models;
 using RelinkModOrganizer.ThirdParties.DataTools;
+using RelinkModOrganizer.ViewModels;
 using Results = RelinkModOrganizer.TryResults;
 
 namespace RelinkModOrganizer.Services;
@@ -123,6 +125,9 @@ public class ModificationService(
         var enabledMods = configService.Config.Mods.Values.Where(mod => mod.Enabled);
         if (!enabledMods.Any())
             return Results.Error("No enabled mods found");
+
+        // Make sure bigger order mods are copied first, then smaller order mods can overwrite them
+        enabledMods = enabledMods.OrderByDescending(mod => mod.Order);
 
         var modsDirPath = Path.Combine(AppContext.BaseDirectory, Consts.ModsDirName);
 
