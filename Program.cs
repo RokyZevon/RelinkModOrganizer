@@ -1,10 +1,11 @@
-﻿using Avalonia;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Avalonia;
 using Avalonia.ReactiveUI;
 using RelinkModOrganizer.Models;
 using RelinkModOrganizer.Services;
-using System;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace RelinkModOrganizer;
 
@@ -30,9 +31,11 @@ internal sealed class Program
     PropertyNameCaseInsensitive = true,
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     WriteIndented = true,
+    ReadCommentHandling = JsonCommentHandling.Skip,
     AllowTrailingCommas = true)]
 [JsonSerializable(typeof(Config))]
 [JsonSerializable(typeof(Mod))]
 [JsonSerializable(typeof(List<Mod>))]
+[JsonSerializable(typeof(Dictionary<string, string>))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext
 { }

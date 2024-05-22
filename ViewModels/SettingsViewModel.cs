@@ -1,35 +1,52 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
-using RelinkModOrganizer.Services;
 using ReactiveUI;
+using RelinkModOrganizer.Services;
 
 namespace RelinkModOrganizer.ViewModels;
 
 public class SettingsViewModel : ViewModelBase
 {
     private string? _gameDirPath;
-
+    //private ComboBoxItem? _selectedLanguage;
+    private LanguageItemViewModel? _selectedLanguage;
     private readonly ConfigurationService _configurationService;
     private readonly ModificationService _modificationService;
     private readonly DialogService _dialogService;
+    private readonly LocalizationService _localizationService;
 
     public SettingsViewModel(
         ConfigurationService configurationService,
         ModificationService modificationService,
-        DialogService dialogService)
+        DialogService dialogService,
+        LocalizationService localizationService)
     {
         _configurationService = configurationService;
         _modificationService = modificationService;
         _dialogService = dialogService;
+        _localizationService = localizationService;
 
         LocateGameCommand = ReactiveCommand.CreateFromTask(LocateGameHandlerAsync);
         GameDirPath = _configurationService.Config.GameDirPath;
+
+        SelectedLanguage = AvailableLanguages.FirstOrDefault(
+            item => item.Code == _configurationService.Config.Language);
+
+        this.WhenAnyValue(vm => vm.SelectedLanguage)
+            .Subscribe(async item =>
+            {
+                if (item is null) return;
+                await _localizationService.ChangeLanguageAsync(item.Code);
+            });
     }
 
     public string? GameDirPath
@@ -37,6 +54,19 @@ public class SettingsViewModel : ViewModelBase
         get => _gameDirPath;
         set => _gameDirPath = this.RaiseAndSetIfChanged(ref _gameDirPath, value);
     }
+
+    public LanguageItemViewModel? SelectedLanguage
+    {
+        get => _selectedLanguage;
+        set => _selectedLanguage = this.RaiseAndSetIfChanged(ref _selectedLanguage, value);
+    }
+
+    public List<LanguageItemViewModel> AvailableLanguages { get; } =
+    [
+        new LanguageItemViewModel("English", "en-US"),
+        new LanguageItemViewModel("简体中文", "zh-CN"),
+        new LanguageItemViewModel("日本語", "ja-JP"),
+    ];
 
     public ICommand LocateGameCommand { get; }
 
@@ -48,7 +78,7 @@ public class SettingsViewModel : ViewModelBase
 
         var files = await storageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
-            Title = "Locate Game Exe",
+            Title = Ls["locateGame"],
             AllowMultiple = false,
             FileTypeFilter = [new("exe") { Patterns = [Consts.GameExeName] }]
         });
@@ -64,7 +94,7 @@ public class SettingsViewModel : ViewModelBase
                 ProductMinorPart: >= Consts.GameMinorVer,
             })
         {
-            _dialogService.ShowDialog("Selected game version is not supported, please ensure your game version is up-to-date");
+            _dialogService.ShowDialog(Ls["gameVersionUnsupported"]);
             return;
         }
 

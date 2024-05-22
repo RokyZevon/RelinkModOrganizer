@@ -20,8 +20,6 @@ public class ModListViewModel : ViewModelBase
     //private readonly IFileProvider _fileProvider;
     private readonly DialogService _dialogService;
 
-    //private ObservableCollection<ModItemViewModel> _modItems;
-
     public ModListViewModel(
         ConfigurationService configService,
         ModificationService modification,

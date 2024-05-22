@@ -8,4 +8,9 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
     }
+    public MainWindow(object? dataContext)
+    {
+        InitializeComponent();
+        DataContext = dataContext;
+    }
 }

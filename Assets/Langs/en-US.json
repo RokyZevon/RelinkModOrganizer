@@ -1,0 +1,27 @@
+{
+  // Navigation
+  "modList": "Mod List",
+  "settings": "Settings",
+
+  // Mod List
+  "dragToReorder": "Drag here to reorder. ",
+  "priority": "Priority",
+  "priorityTooltip": "The higher the priority (lower number), the more important the mod is, and it will overwrite others in conflicts. ",
+  "preview": "Preview",
+  "previewTooltip": "Click to view a larger image. ",
+  "id": "ID",
+  "idTooltip": "Folder's name in the Mods Folder. ",
+  "name": "Name",
+  "nameTooltip": "Click to edit. ",
+  "enabled": "Enabled",
+  "openModsFolder": "Open Mods Folder",
+  "reload": "Reload",
+  "modIt": "Mod It",
+
+  // Settings
+  "gamePath": "Game Path",
+  "locateGame": "Locate Game",
+  "language": "Language",
+  "selectLanguage": "Select Language",
+  "gameVersionUnsupported": "Selected game version is not supported, please ensure your game version is up-to-date",
+}

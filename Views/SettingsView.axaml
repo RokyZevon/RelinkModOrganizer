@@ -10,13 +10,14 @@
   <Grid ShowGridLines="False">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
     </Grid.RowDefinitions>
 
     <Border Grid.Row="0" CornerRadius="10" Background="#80404040" Margin="10">
       <Grid ShowGridLines="False"
             RowDefinitions="Auto, *">
-        <TextBlock Text="Game Path" DockPanel.Dock="Left" FontWeight="Bold" Margin="10, 10" />
+        <TextBlock Text="{Binding Ls[gamePath]}" DockPanel.Dock="Left" FontWeight="Bold" Margin="10, 10" />
         <DockPanel Grid.Row="1" Margin="10,0,10,10" LastChildFill="True">
           <Button Command="{Binding LocateGameCommand}"
                   DockPanel.Dock="Right"
@@ -29,7 +30,7 @@
                 <PathIcon Data="{StaticResource folder_open_regular}"
                           HorizontalAlignment="Center"
                           VerticalAlignment="Center" />
-                <TextBlock Text="Locate Game"
+                <TextBlock Text="{Binding Ls[locateGame]}"
                            Margin="10,0,0,0"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center" />
@@ -39,6 +40,26 @@
           <TextBox IsReadOnly="True" Text="{Binding GameDirPath}" Height="20"
                    Watermark="Please locate your granblue_fantasy_relink.exe first." />
         </DockPanel>
+      </Grid>
+    </Border>
+
+    <Border Grid.Row="1" CornerRadius="10" Background="#80404040" Margin="10">
+      <Grid ShowGridLines="False"
+            RowDefinitions="Auto, *">
+        <TextBlock Text="{Binding Ls[language]}" DockPanel.Dock="Left" FontWeight="Bold" Margin="10, 10" />
+        <StackPanel Grid.Row="1" Margin="10,0,10,10">
+          <!--<ComboBox Name="LanguageSelector"
+                    ItemsSource="{Binding AvailableLanguages}"
+                    SelectedItem="{Binding SelectedLanguage}" />-->
+          <ComboBox ItemsSource="{Binding AvailableLanguages}"
+                    SelectedItem="{Binding SelectedLanguage}">
+            <ComboBox.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding Name}" />
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+        </StackPanel>
       </Grid>
     </Border>
   </Grid>

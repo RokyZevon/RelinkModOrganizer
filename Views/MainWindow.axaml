@@ -37,13 +37,15 @@
           <ListBoxItem Name="ModList" IsEnabled="{Binding IsGamePathSet}">
             <StackPanel Orientation="Horizontal">
               <PathIcon Data="{StaticResource apps_list_regular}" />
-              <TextBlock Text="Mod List" Margin="10,0,0,0" />
+              <TextBlock Text="{Binding Ls[modList]}"
+                         Margin="10, 0, 0, 0" />
             </StackPanel>
           </ListBoxItem>
           <ListBoxItem Name="Settings">
             <StackPanel Orientation="Horizontal">
               <PathIcon Data="{StaticResource settings_regular}" />
-              <TextBlock Text="Settings" Margin="10,0,0,0" />
+              <TextBlock Text="{Binding Ls[settings]}"
+                         Margin="10, 0, 0, 0" />
             </StackPanel>
           </ListBoxItem>
         </ListBox>

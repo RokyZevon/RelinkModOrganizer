@@ -70,6 +70,7 @@ public class ConfigurationService
 
 public class Config : ReactiveObject
 {
+    public string Language { get; set; } = "en-US";
     public string? GameDirPath { get; set; }
 
     /// <summary>

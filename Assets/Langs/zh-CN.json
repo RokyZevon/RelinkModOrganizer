@@ -1,0 +1,27 @@
+{
+  // 导航菜单
+  "modList": "Mod 列表",
+  "settings": "设置",
+
+  // Mod 列表
+  "dragToReorder": "拖拽此处可重新排序",
+  "priority": "优先级",
+  "priorityTooltip": "优先级越高则 Mod 越重要, 当发生冲突时会覆盖掉优先级低的 Mod",
+  "preview": "预览",
+  "previewTooltip": "点击查看大图",
+  "id": "ID",
+  "idTooltip": "Mods 文件夹中的每个 Mod 的文件夹名",
+  "name": "名称",
+  "nameTooltip": "点击可以编辑",
+  "enabled": "启用",
+  "openModsFolder": "打开 Mod 文件夹",
+  "reload": "刷新",
+  "modIt": "打 Mod",
+
+  // 设置
+  "gamePath": "游戏路径",
+  "locateGame": "选择游戏",
+  "language": "语言",
+  "selectLanguage": "选择语言",
+  "gameVersionUnsupported": "该版本的游戏不受支持, 请确保游戏本体已更新至最新"
+}

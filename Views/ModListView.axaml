@@ -75,7 +75,7 @@
           </Image>
         </Template>
       </Setter>
-      <Setter Property="ToolTip.Tip" Value="Drag here to reorder" />
+      <Setter Property="ToolTip.Tip" Value="{Binding Ls[dragToReorder]}" />
     </Style>
 
     <Style Selector="DataGrid.ItemsDragAndDrop">
@@ -138,13 +138,14 @@
           <!-- Priority / Order -->
           <DataGridTemplateColumn Width="Auto" IsReadOnly="True">
             <DataGridTemplateColumn.Header>
-              <TextBlock Text="Priority">
+              <TextBlock Text="{Binding Ls[priority]}">
                 <ToolTip.Tip>
-                  <TextBlock>
+                  <TextBlock Text="{Binding Ls[priorityTooltip]}" />
+                  <!--<TextBlock>
                     The higher the priority (lower number), <LineBreak />
                     the more important the mod is, <LineBreak />
                     and it will overwrite others in conflicts.
-                  </TextBlock>
+                  </TextBlock>-->
                 </ToolTip.Tip>
               </TextBlock>
             </DataGridTemplateColumn.Header>
@@ -162,11 +163,9 @@
           <!-- Preview Image -->
           <DataGridTemplateColumn Width="Auto" IsReadOnly="True">
             <DataGridTemplateColumn.Header>
-              <TextBlock Text="Preview">
+              <TextBlock Text="{Binding Ls[preview]}">
                 <ToolTip.Tip>
-                  <TextBlock>
-                    Click to view a larger image.
-                  </TextBlock>
+                  <TextBlock Text="{Binding Ls[previewTooltip]}" />
                 </ToolTip.Tip>
               </TextBlock>
             </DataGridTemplateColumn.Header>
@@ -209,11 +208,9 @@
           <!-- ID -->
           <DataGridTextColumn Binding="{Binding Id}" Width="Auto" IsReadOnly="True">
             <DataGridTextColumn.Header>
-              <TextBlock Text="ID">
+              <TextBlock Text="{Binding Ls[id]}">
                 <ToolTip.Tip>
-                  <TextBlock>
-                    Folder's name in the Mods Folder.
-                  </TextBlock>
+                  <TextBlock Text="{Binding Ls[idTooltip]}" />
                 </ToolTip.Tip>
               </TextBlock>
             </DataGridTextColumn.Header>
@@ -222,29 +219,26 @@
           <!-- Name -->
           <DataGridTextColumn Binding="{Binding Name}" Width="*" IsReadOnly="False">
             <DataGridTextColumn.Header>
-              <TextBlock Text="Name">
+              <TextBlock Text="{Binding Ls[name]}">
                 <ToolTip.Tip>
-                  <TextBlock>
-                    Click to edit.
-                  </TextBlock>
+                  <TextBlock Text="{Binding Ls[nameTooltip]}" />
                 </ToolTip.Tip>
               </TextBlock>
             </DataGridTextColumn.Header>
           </DataGridTextColumn>
 
           <!-- Enabled -->
-          <DataGridTemplateColumn Header="Enabled" Width="Auto" IsReadOnly="False">
-            <DataGridTemplateColumn.CellStyleClasses></DataGridTemplateColumn.CellStyleClasses>
+          <DataGridTemplateColumn Header="{Binding Ls[enabled]}" Width="Auto" IsReadOnly="False">
             <DataGridTemplateColumn.CellTemplate>
               <DataTemplate>
                 <ToggleSwitch IsChecked="{Binding Enabled}"
                               OnContent=""
                               OffContent=""
                               HorizontalAlignment="Center"
-                              HorizontalContentAlignment="Center"
                               VerticalAlignment="Center"
+                              HorizontalContentAlignment="Center"
                               VerticalContentAlignment="Center"
-                              Margin="12, 0">
+                              Margin="8, 0">
                   <ToggleSwitch.Styles>
                     <Style Selector="ToggleSwitch:checked /template/ Border">
                       <Setter Property="Background" Value="DodgerBlue" />
@@ -269,7 +263,7 @@
             <PathIcon Data="{StaticResource folder_open_regular}"
                       HorizontalAlignment="Center"
                       VerticalAlignment="Center" />
-            <TextBlock Text="Open Mods Folder"
+            <TextBlock Text="{Binding Ls[openModsFolder]}"
                        Margin="10,0,0,0"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center" />
@@ -287,7 +281,7 @@
             <PathIcon Data="{StaticResource arrow_sync_regular}"
                       HorizontalAlignment="Center"
                       VerticalAlignment="Center" />
-            <TextBlock Text="Reload"
+            <TextBlock Text="{Binding Ls[reload]}"
                        Margin="10,0,0,0"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center" />
@@ -304,7 +298,7 @@
             <PathIcon Data="{StaticResource checkmark_regular}"
                       HorizontalAlignment="Center"
                       VerticalAlignment="Center" />
-            <TextBlock Text="Mod it"
+            <TextBlock Text="{Binding Ls[modIt]}"
                        Margin="10,0,0,0"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center" />

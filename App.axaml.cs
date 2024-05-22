@@ -1,9 +1,7 @@
 using System;
-using System.IO;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Avalonia.Platform.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using RelinkModOrganizer.Services;
 using RelinkModOrganizer.ThirdParties.DataTools;
@@ -14,27 +12,22 @@ namespace RelinkModOrganizer;
 
 public partial class App : Application
 {
-    public override void Initialize() =>
+    public new static App? Current => Application.Current as App;
+    public IServiceProvider ServiceProvider { get; } = new ServiceCollection()
+        .AddServices()
+        .AddViewModels()
+        .BuildServiceProvider();
+
+    public override void Initialize()
+    {
         AvaloniaXamlLoader.Load(this);
+    }
 
     public override void OnFrameworkInitializationCompleted()
     {
-        var services = new ServiceCollection();
-        services.AddServices();
-        services.AddViewModels();
-
-        var serviceProvider = services.BuildServiceProvider();
-        var mainWindowViewModel = serviceProvider.GetRequiredService<MainWindowViewModel>();
-
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            desktop.MainWindow = new MainWindow
-            {
-                DataContext = mainWindowViewModel
-            };
-
-            services.AddSingleton<IStorageProvider>();
-        }
+            desktop.MainWindow = new MainWindow(
+                dataContext: ServiceProvider.GetRequiredService<MainWindowViewModel>());
 
         base.OnFrameworkInitializationCompleted();
     }
@@ -46,8 +39,8 @@ public static partial class ServiceExtensions
         services.AddSingleton<ConfigurationService>()
                 .AddSingleton<ModificationService>()
                 .AddSingleton<DataToolsService>()
-                .AddSingleton<DialogService>();
-                //.AddFileProvider();
+                .AddSingleton<DialogService>()
+                .AddSingleton<LocalizationService>();
 
     public static IServiceCollection AddViewModels(this IServiceCollection services) =>
         services.AddSingleton<MainWindowViewModel>()

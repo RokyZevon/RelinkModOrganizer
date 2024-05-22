@@ -1,0 +1,27 @@
+{
+  // メニュー
+  "modList": "Mod リスト",
+  "settings": "設定",
+
+  // Mod リスト
+  "dragToReorder": "ドラッグして並び替えてください。",
+  "priority": "優先度",
+  "priorityTooltip": "優先順位が高いほど（数字が小さいほど）、その MOD はより重要であり、競合している他の MOD を上書きします。",
+  "preview": "プレビュー",
+  "previewTooltip": "クリックすると大きな画像が表示されます。",
+  "id":"ID",
+  "idTooltip": "Mods フォルダ内のフォルダ名。",
+  "name":"名前",
+  "nameTooltip": "クリックして編集してください。",
+  "enabled": "有効",
+  "openModsFolder": "Mods フォルダを開く。",
+  "reload": "リロード",
+  "modIt": "Mod It",
+
+  // 設定
+  "gamePath": "ゲーム パス",
+  "locateGame": "ゲームを探す",
+  "language": "言語",
+  "selectLanguage": "言語を選択",
+  "gameVersionUnsupported": "ゲーム バージョンがサポートされていません，最新のバージョンを使用してください。"
+}
