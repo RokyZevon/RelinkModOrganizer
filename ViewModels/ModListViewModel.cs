@@ -5,8 +5,11 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia.Controls;
 using DynamicData.Binding;
+using MsBox.Avalonia;
 using ReactiveUI;
+using RelinkModOrganizer.Helpers;
 using RelinkModOrganizer.Mappers;
 using RelinkModOrganizer.Services;
 
@@ -18,18 +21,15 @@ public class ModListViewModel : ViewModelBase
     private readonly ModificationService _modificationService;
 
     //private readonly IFileProvider _fileProvider;
-    private readonly DialogService _dialogService;
 
     public ModListViewModel(
         ConfigurationService configService,
-        ModificationService modification,
-        //IFileProvider fileProvider,
-        DialogService dialogService)
+        ModificationService modification)
+    //IFileProvider fileProvider
     {
         _configService = configService;
         _modificationService = modification;
         //_fileProvider = fileProvider;
-        _dialogService = dialogService;
 
         LoadModItems();
 
@@ -82,7 +82,7 @@ public class ModListViewModel : ViewModelBase
     private async void ReloadModsCommandHandler()
     {
         (await _modificationService.LoadModsFromDiskAsync())
-            .Except(_dialogService.ShowDialog);
+            .Except(async (err) => await MessageBoxHelpers.ErrorAsync(err));
 
         LoadModItems();
     }
@@ -108,38 +108,52 @@ public class ModListViewModel : ViewModelBase
     {
         if (string.IsNullOrWhiteSpace(_configService.Config.GameDirPath))
         {
-            _dialogService.ShowDialog("Please locate game in Settings first");
+            await MessageBoxHelpers.ErrorAsync(Ls["gameNotFound"]);
             return;
         }
 
         // check if there are any conflict mods, then alert
         var conflicMods = _modificationService.GetConflicMods();
-        if (conflicMods != null && conflicMods.Count != 0)
+        if (conflicMods is { Count: > 0 })
         {
             var messages = conflicMods.Select(m =>
-$@"Found conflicts between:
-
-{string.Join(", \n", m)},
-
-please ensure only one of them is enabled.
-");
-            _dialogService.ShowDialog(messages);
-            return;
+                $"""
+                {Ls["conflictsContent1"]}
+                {string.Join(", \n", m)},
+                {Ls["conflictsContent2"]}
+                """);
+            var message = string.Join("\n\n", messages);
+            var msBoxParams = new MsBox.Avalonia.Dto.MessageBoxCustomParams
+            {
+                ButtonDefinitions = [new() { Name = Ls["ok"] }, new() { Name = Ls["cancel"] }],
+                ContentTitle = Ls["conflictsTitle"],
+                ContentMessage = message,
+                Icon = MsBox.Avalonia.Enums.Icon.Warning,
+                Topmost = true,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            };
+            var msBox = MessageBoxManager.GetMessageBoxCustom(msBoxParams);
+            var msBoxResult = await msBox.ShowAsync();
+            if (msBoxResult == Ls["cancel"])
+                return;
         }
 
         if (!_modificationService.TryCleanUpGameDir()
-            .Except(_dialogService.ShowDialog).Success)
+            .Except(async (err) => { await MessageBoxHelpers.ErrorAsync(err); })
+            .Success)
             return;
 
         if (!(await _modificationService.TryCopyModsAsync())
-            .Except(_dialogService.ShowDialog).Success)
+            .Except(async (err) => { await MessageBoxHelpers.ErrorAsync(err); })
+            .Success)
             return;
 
         if (!(await _modificationService.TryGenerateDataIndexAsync())
-            .Except(_dialogService.ShowDialog).Success)
+            .Except(async (err) => { await MessageBoxHelpers.ErrorAsync(err); })
+            .Success)
             return;
 
-        _dialogService.ShowDialog("Mods installed successfully");
+        await MessageBoxHelpers.InfoAsync(Ls["modInstallSuccess"]);
     }
 
     //private void WatchModsDirectory()

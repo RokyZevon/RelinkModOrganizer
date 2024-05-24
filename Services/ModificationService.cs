@@ -4,31 +4,40 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using DynamicData.Binding;
 using ReactiveUI;
 using RelinkModOrganizer.Models;
 using RelinkModOrganizer.ThirdParties.DataTools;
-using RelinkModOrganizer.ViewModels;
 using Results = RelinkModOrganizer.TryResults;
 
 namespace RelinkModOrganizer.Services;
 
 public class ModificationService(
     ConfigurationService configService,
-    DataToolsService dataToolsService)
+    DataToolsService dataToolsService,
+    LocalizationService localizationService)
 {
     public async Task<TryResult> LoadModsFromDiskAsync()
     {
         var modsDirPath = Path.Combine(AppContext.BaseDirectory, Consts.ModsDirName);
 
         var modIds = new List<string>();
-        foreach (var modPath in Directory.EnumerateFileSystemEntries(modsDirPath, "*", SearchOption.TopDirectoryOnly))
+        foreach (var modPath in Directory.EnumerateFileSystemEntries(
+            modsDirPath,
+            "*",
+            SearchOption.TopDirectoryOnly))
         {
             var dataDir = Directory
                 .EnumerateDirectories(modPath, Consts.GameDataDirName, SearchOption.AllDirectories)
                 .FirstOrDefault();
+
             if (string.IsNullOrWhiteSpace(dataDir))
-                return Results.Error($"No {Consts.GameDataDirName} folder found in {modPath}, seems not a valid mod");
+            {
+                var msg = string.Format(
+                    localizationService.LocalizedStrings["noDataDirInMod"],
+                    Consts.GameDataDirName,
+                    modPath);
+                return Results.Error(msg);
+            }
 
             var modId = Path.GetFileName(modPath);
             var relativeFilePaths = Directory
@@ -92,7 +101,7 @@ public class ModificationService(
     {
         var gameDirPath = configService.Config.GameDirPath;
         if (string.IsNullOrWhiteSpace(gameDirPath))
-            return Results.Error("Game directory not set");
+            return Results.Error(localizationService.LocalizedStrings["gameNotFound"]);
 
         var dataDirPath = Path.Combine(gameDirPath, Consts.GameDataDirName);
         try
@@ -116,15 +125,15 @@ public class ModificationService(
     {
         var gameDirPath = configService.Config.GameDirPath;
         if (string.IsNullOrWhiteSpace(gameDirPath))
-            return Results.Error("Game directory not set");
+            return Results.Error(localizationService.LocalizedStrings["gameNotFound"]);
 
         var gameDataPath = Path.Combine(gameDirPath, Consts.GameDataDirName);
         if (!Directory.Exists(gameDataPath))
-            return Results.Error("Could not found a data directory in game directory, please make sure the game directory is correct");
+            return Results.Error(localizationService.LocalizedStrings["noDataDirInGame"]);
 
         var enabledMods = configService.Config.Mods.Values.Where(mod => mod.Enabled);
         if (!enabledMods.Any())
-            return Results.Error("No enabled mods found");
+            return Results.Error(localizationService.LocalizedStrings["noEnabledMods"]);
 
         // Make sure bigger order mods are copied first, then smaller order mods can overwrite them
         enabledMods = enabledMods.OrderByDescending(mod => mod.Order);
@@ -143,7 +152,13 @@ public class ModificationService(
                     .EnumerateDirectories(srcModPath, Consts.GameDataDirName, SearchOption.AllDirectories)
                     .FirstOrDefault();
                 if (dataDirPath == null)
-                    return Results.Error($"No '{Consts.GameDataDirName}' folder found in {srcModPath}, seems not a valid mod");
+                {
+                    var msg = string.Format(
+                        localizationService.LocalizedStrings["noDataDirInMod"],
+                        Consts.GameDataDirName,
+                        srcModPath);
+                    return Results.Error(msg);
+                }
 
                 foreach (var filePath in mod.RelativeFilePaths)
                 {
@@ -160,11 +175,11 @@ public class ModificationService(
         }
         catch (UnauthorizedAccessException ex)
         {
-            return Results.Error($"Permission denied when trying to access file: {ex.Message}");
+            return Results.Error(localizationService.LocalizedStrings["permDeny"] + ex.Message);
         }
         catch (Exception ex)
         {
-            return Results.Error($"An error occurred while copying the file: {ex.Message}");
+            return Results.Error(localizationService.LocalizedStrings["copyError"] + ex.Message);
         }
 
         return Results.Ok();
@@ -174,7 +189,7 @@ public class ModificationService(
     {
         var gameDirPath = configService.Config.GameDirPath;
         if (string.IsNullOrWhiteSpace(gameDirPath))
-            return Results.Error("Game directory not set");
+            return Results.Error(localizationService.LocalizedStrings["gameNotFound"]);
 
         try
         {
@@ -183,11 +198,11 @@ public class ModificationService(
         }
         catch (ArgumentNullException ex)
         {
-            return Results.Error($"Invalid data.i file: {ex.Message}");
+            return Results.Error(localizationService.LocalizedStrings["invalidDataI"] + ex.Message);
         }
         catch (Exception ex)
         {
-            return Results.Error($"An error occurred while generating data.i file: {ex.Message}");
+            return Results.Error(localizationService.LocalizedStrings["errGenDataI"] + ex.Message);
         }
 
         return Results.Ok();

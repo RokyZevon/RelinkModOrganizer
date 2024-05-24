@@ -6,10 +6,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 using ReactiveUI;
+using RelinkModOrganizer.Helpers;
 using RelinkModOrganizer.Services;
 
 namespace RelinkModOrganizer.ViewModels;
@@ -17,22 +17,20 @@ namespace RelinkModOrganizer.ViewModels;
 public class SettingsViewModel : ViewModelBase
 {
     private string? _gameDirPath;
-    //private ComboBoxItem? _selectedLanguage;
+
     private LanguageItemViewModel? _selectedLanguage;
+
     private readonly ConfigurationService _configurationService;
     private readonly ModificationService _modificationService;
-    private readonly DialogService _dialogService;
     private readonly LocalizationService _localizationService;
 
     public SettingsViewModel(
         ConfigurationService configurationService,
         ModificationService modificationService,
-        DialogService dialogService,
         LocalizationService localizationService)
     {
         _configurationService = configurationService;
         _modificationService = modificationService;
-        _dialogService = dialogService;
         _localizationService = localizationService;
 
         LocateGameCommand = ReactiveCommand.CreateFromTask(LocateGameHandlerAsync);
@@ -94,7 +92,7 @@ public class SettingsViewModel : ViewModelBase
                 ProductMinorPart: >= Consts.GameMinorVer,
             })
         {
-            _dialogService.ShowDialog(Ls["gameVersionUnsupported"]);
+            await MessageBoxHelpers.ErrorAsync(Ls["gameVersionUnsupported"]);
             return;
         }
 

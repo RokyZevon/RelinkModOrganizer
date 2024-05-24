@@ -1,27 +1,43 @@
 {
   // 导航菜单
-  "modList": "Mod 列表",
+  "modList": "MOD 列表",
   "settings": "设置",
 
   // Mod 列表
   "dragToReorder": "拖拽此处可重新排序",
   "priority": "优先级",
-  "priorityTooltip": "优先级越高则 Mod 越重要, 当发生冲突时会覆盖掉优先级低的 Mod",
+  "priorityTooltip": "优先级越高则 MOD 越重要, 当发生冲突时会覆盖掉优先级低的 MOD",
   "preview": "预览",
   "previewTooltip": "点击查看大图",
   "id": "ID",
-  "idTooltip": "Mods 文件夹中的每个 Mod 的文件夹名",
+  "idTooltip": "MOD 文件夹中的每个 MOD 的文件夹名",
   "name": "名称",
   "nameTooltip": "点击可以编辑",
   "enabled": "启用",
-  "openModsFolder": "打开 Mod 文件夹",
+  "openModsFolder": "打开 MOD 文件夹",
   "reload": "刷新",
-  "modIt": "打 Mod",
+  "modIt": "打 MOD",
 
   // 设置
   "gamePath": "游戏路径",
   "locateGame": "选择游戏",
   "language": "语言",
   "selectLanguage": "选择语言",
-  "gameVersionUnsupported": "该版本的游戏不受支持, 请确保游戏本体已更新至最新"
+  "gameVersionUnsupported": "该版本的游戏不受支持, 请确保游戏本体已更新至最新",
+
+  // 弹窗
+  "ok": "确定",
+  "cancel": "取消",
+  "conflictsTitle": "发现冲突",
+  "conflictsContent1": "在以下 MOD 间发现冲突: ",
+  "conflictsContent2": "若确认 MOD 顺序正确, 点击 '确定' 以继续; 若需调整 MOD 列表, 点击 '取消' 并重新排序或禁用 MOD",
+  "gameNotFound": "请先在设置界面选择游戏路径",
+  "modInstallSuccess": "MOD 安装成功",
+  "noDataDirInMod": "未能在 {1} 中找到 {0} 文件夹, 看起来它不是一个有效的 MOD",
+  "noDataDirInGame": "未能在游戏根目录下找到 data 文件夹, 请确认游戏路径是否正确",
+  "noEnabledMods": "尚未启用任何 MOD",
+  "permDeny": "尝试访问文件时权限不足: ",
+  "copyError": "复制文件时发生错误: ",
+  "invalidDataI": "无效的 data.i 文件: ",
+  "errGenDataI": "生成 data.i 文件时发生错误: ",
 }

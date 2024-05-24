@@ -1,6 +1,6 @@
 {
   // メニュー
-  "modList": "Mod リスト",
+  "modList": "MOD リスト",
   "settings": "設定",
 
   // Mod リスト
@@ -10,18 +10,34 @@
   "preview": "プレビュー",
   "previewTooltip": "クリックすると大きな画像が表示されます。",
   "id":"ID",
-  "idTooltip": "Mods フォルダ内のフォルダ名。",
+  "idTooltip": "MOD フォルダ内のフォルダ名。",
   "name":"名前",
   "nameTooltip": "クリックして編集してください。",
   "enabled": "有効",
-  "openModsFolder": "Mods フォルダを開く。",
+  "openModsFolder": "MOD フォルダを開く。",
   "reload": "リロード",
-  "modIt": "Mod It",
+  "modIt": "Mod する",
 
   // 設定
-  "gamePath": "ゲーム パス",
-  "locateGame": "ゲームを探す",
+  "gamePath": "ゲームパス",
+  "locateGame": "ゲームを選ぶ",
   "language": "言語",
   "selectLanguage": "言語を選択",
-  "gameVersionUnsupported": "ゲーム バージョンがサポートされていません，最新のバージョンを使用してください。"
+  "gameVersionUnsupported": "ゲーム バージョンがサポートされていません，最新のバージョンを使用してください。",
+
+  // Dialogs
+  "ok": "OK",
+  "cancel": "キャンセル",
+  "conflictsTitle": "競合が検出されました",
+  "conflictsContent1": "以下の Mod 間で競合が検出されました",
+  "conflictsContent2": "MOD の順序が正しいことを確認したら、「OK」 をクリックして続行し、MOD リストを調整する必要がある場合は、「キャンセル」 をクリックして順序を変更するか、MOD を無効にします。",
+  "gameNotFound": "まず設定からゲームを選択してください",
+  "modInstallSuccess": "MODのインストールに成功しました",
+  "noDataDirInMod": "{1} に {0} フォルダが見つかりません、有効な MOD ではないようです",
+  "noDataDirInGame": "ゲームのルートディレクトリに data フォルダが見つかりません。ゲームのパスが正しいことを確認してください。",
+  "noEnabledMods": "MOD はまだ有効になっていません",
+  "permDeny": "ファイルのアクセス権限がありません: ",
+  "copyError": "ファイルのコピー中にエラーが発生しました:",
+  "invalidDataI": "無効な data.i ファイル: ",
+  "errGenDataI": "data.i ファイルの生成中にエラーが発生しました: ",
 }

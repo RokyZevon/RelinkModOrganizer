@@ -39,7 +39,6 @@ public static partial class ServiceExtensions
         services.AddSingleton<ConfigurationService>()
                 .AddSingleton<ModificationService>()
                 .AddSingleton<DataToolsService>()
-                .AddSingleton<DialogService>()
                 .AddSingleton<LocalizationService>();
 
     public static IServiceCollection AddViewModels(this IServiceCollection services) =>

@@ -1,12 +1,12 @@
 {
   // Navigation
-  "modList": "Mod List",
+  "modList": "MOD List",
   "settings": "Settings",
 
   // Mod List
   "dragToReorder": "Drag here to reorder. ",
   "priority": "Priority",
-  "priorityTooltip": "The higher the priority (lower number), the more important the mod is, and it will overwrite others in conflicts. ",
+  "priorityTooltip": "The higher the priority (lower number), the more important the MOD is, and it will overwrite others in conflicts. ",
   "preview": "Preview",
   "previewTooltip": "Click to view a larger image. ",
   "id": "ID",
@@ -24,4 +24,20 @@
   "language": "Language",
   "selectLanguage": "Select Language",
   "gameVersionUnsupported": "Selected game version is not supported, please ensure your game version is up-to-date",
+
+  // Dialogs
+  "ok": "OK",
+  "cancel": "Cancel",
+  "conflictsTitle": "Conflicts Detected",
+  "conflictsContent1": "Found conflicts between: ",
+  "conflictsContent2": "Click 'OK' if the order is correct, or 'Cancel' to reorder or disable some",
+  "gameNotFound": "Please locate game in Settings first",
+  "modInstallSuccess": "MOD installed successfully",
+  "noDataDirInMod": "No {0} folder found in {1}, seems not a valid MOD",
+  "noDataDirInGame": "Could not found a data folder in game's root directory, please make sure the game path is correct",
+  "noEnabledMods": "No MODs have been enabled yet",
+  "permDeny": "Permission denied when trying to access file: ",
+  "copyError": "An error occurred while copying the file: ",
+  "invalidDataI": "Invalid data.i file: ",
+  "errGenDataI": "An error occurred while generating data.i file: ",
 }
