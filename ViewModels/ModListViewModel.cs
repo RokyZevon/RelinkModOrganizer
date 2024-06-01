@@ -93,15 +93,16 @@ public class ModListViewModel : ViewModelBase
         ModItems.AddRange(_configService.Config.Mods.Values.OrderBy(mod => mod.Order).Select(mod => mod.ToViewModel()).ToList());
         foreach (var item in ModItems)
             item.WhenAnyValue(mi => mi.Name, mi => mi.Enabled, mi => mi.Order)
-                .Subscribe(async _ =>
+                .Subscribe(_ =>
                 {
                     item.MapTo(_configService.Config.Mods[item.Id]);
                     _configService.Config.Mods = _configService.Config.Mods
                         .AsEnumerable()
                         .OrderBy(mod => mod.Value.Order)
                         .ToDictionary(kv => kv.Key, kv => kv.Value);
-                    await _configService.SaveChangesAsync();
                 });
+
+        _configService.SaveChanges();
     }
 
     private async Task ModItHandlerAsync()

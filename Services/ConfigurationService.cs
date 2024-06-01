@@ -38,6 +38,17 @@ public class ConfigurationService
         await writer.WriteAsync(Config.ToJson());
     }
 
+    public void SaveChanges()
+    {
+        using var stream = new FileStream(
+            Path.Combine(AppContext.BaseDirectory, Consts.ConfigName),
+            FileMode.Create,
+            FileAccess.Write,
+            FileShare.Read);
+        using var writer = new StreamWriter(stream);
+        writer.Write(Config.ToJson());
+    }
+
     public bool IsGameDirPathValid() =>
         !string.IsNullOrWhiteSpace(Config.GameDirPath) &&
         Path.GetFileName(Config.GameDirPath) == Consts.GameExeName &&
