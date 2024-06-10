@@ -97,8 +97,11 @@ public class SettingsViewModel : ViewModelBase
         }
 
         var gameDirPath = Path.GetDirectoryName(gameExePath);
-
         _configurationService.Config.GameDirPath = gameDirPath;
+
+        var gameExeMd5 = Md5Helper.CalculateMd5(gameExePath);
+        _configurationService.Config.GameExeMd5 = gameExeMd5;
+
         await _configurationService.SaveChangesAsync();
 
         var dst = Path.Combine(AppContext.BaseDirectory, Consts.GameIndexBakName);

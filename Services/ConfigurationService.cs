@@ -83,6 +83,7 @@ public class Config : ReactiveObject
 {
     public string Language { get; set; } = "en-US";
     public string? GameDirPath { get; set; }
+    public string? GameExeMd5 { get; set; }
 
     /// <summary>
     /// key: Id

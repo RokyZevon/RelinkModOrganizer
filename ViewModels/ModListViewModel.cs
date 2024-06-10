@@ -113,6 +113,20 @@ public class ModListViewModel : ViewModelBase
             return;
         }
 
+        // check if game exe updated
+        var gameExePath = Path.Combine(_configService.Config.GameDirPath, Consts.GameExeName);
+        var newMd5 = Md5Helper.CalculateMd5(gameExePath);
+        if (newMd5 != _configService.Config.GameExeMd5)
+        {
+            // clean old outdated data index
+            var bakPath = Path.Combine(AppContext.BaseDirectory, Consts.GameIndexBakName);
+            File.Delete(Path.Combine(bakPath));
+            await _modificationService.BackUpGameIndexAsync(bakPath);
+
+            // save the new md5
+            _configService.Config.GameExeMd5 = newMd5;
+        }
+
         // check if there are any conflict mods, then alert
         var conflicMods = _modificationService.GetConflicMods();
         if (conflicMods is { Count: > 0 })
